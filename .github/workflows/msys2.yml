@@ -19,28 +19,28 @@ jobs:
           pacboy: clang:p openssl:p
       - name: autogen.sh
         shell: msys2 {0}
-        working-directory: ./objfw
+        working-directory: ./ObjFW
         run: ./autogen.sh
       - name: configure
         shell: msys2 {0}
-        working-directory: ./objfw
+        working-directory: ./ObjFW
         run: ./configure OBJC=clang --prefix=./build-${{matrix.sys}}
       - name: make
         shell: msys2 {0}
-        working-directory: ./objfw
+        working-directory: ./ObjFW
         run: make -j4
       - name: make check
         shell: msys2 {0}
-        working-directory: ./objfw
+        working-directory: ./ObjFW
         run: make check
       - name: make install
         shell: msys2 {0}
-        working-directory: ./objfw
+        working-directory: ./ObjFW
         run: make install
-      - name: tar objfw.tar.xz ./objfw/build
+      - name: tar objfw.tar.xz ./ObjFW/build
         shell: msys2 {0}
-        run: tar -cJf objfw.tar.xz ./objfw/build-${{matrix.sys}}
+        run: tar -cJf objfw.tar.xz ./ObjFW/build-${{matrix.sys}}
       - uses: actions/upload-artifact@v2
         with:
           name: objfw-${{matrix.sys}}
-          path: ./objfw.tar.xz
+          path: ./ObjFW.tar.xz
