@@ -1,0 +1,4 @@
+[submodule "obj-fw"]
+	path = ObjFW
+	url = https://github.com/ObjFW/ObjFW.git
+	branch = 1.1.4-release
