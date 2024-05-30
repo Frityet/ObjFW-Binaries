@@ -1,4 +1,4 @@
-name: msys2
+name: msys2-static
 on: [release]
 jobs:
   tests:
@@ -19,11 +19,6 @@ jobs:
           msystem: ${{matrix.sys}}
           install: autoconf automake make tar git
           pacboy: clang:p openssl:p
-      - name: Get submodules
-        shell: msys2 {0}
-        run: |
-          git config --global --add safe.directory ./
-          git submodule update --init --recursive
       - name: autogen.sh
         shell: msys2 {0}
         working-directory: ./ObjFW
@@ -34,7 +29,7 @@ jobs:
         run: |
           export BUILD_DIR=$(pwd)/build-${{matrix.sys}}
           mkdir -p $BUILD_DIR
-          ./configure OBJC=clang --prefix=$BUILD_DIR
+          ./configure OBJC=clang --prefix=$BUILD_DIR --disable-shared --enable-static
       - name: make
         shell: msys2 {0}
         working-directory: ./ObjFW

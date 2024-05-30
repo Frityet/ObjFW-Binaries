@@ -1,0 +1,51 @@
+name: msys2-shared
+on: [release]
+jobs:
+  tests:
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        sys:
+          - mingw64
+          - ucrt64
+          - clang64
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+      - uses: msys2/setup-msys2@v2
+        with:
+          update: true
+          msystem: ${{matrix.sys}}
+          install: autoconf automake make tar git
+          pacboy: clang:p openssl:p
+      - name: autogen.sh
+        shell: msys2 {0}
+        working-directory: ./ObjFW
+        run: ./autogen.sh
+      - name: configure
+        shell: msys2 {0}
+        working-directory: ./ObjFW
+        run: |
+          export BUILD_DIR=$(pwd)/build-${{matrix.sys}}
+          mkdir -p $BUILD_DIR
+          ./configure OBJC=clang --prefix=$BUILD_DIR --disable-static --enable-shared
+      - name: make
+        shell: msys2 {0}
+        working-directory: ./ObjFW
+        run: make -j4
+      - name: make check
+        shell: msys2 {0}
+        working-directory: ./ObjFW
+        run: make check
+      - name: make install
+        shell: msys2 {0}
+        working-directory: ./ObjFW
+        run: make install
+      - name: tar ObjFW.tar.xz ./ObjFW/build-${{matrix.sys}}
+        shell: msys2 {0}
+        run: tar -cJf ObjFW.tar.xz ./ObjFW/build-${{matrix.sys}}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: objfw-${{matrix.sys}}
+          path: ./ObjFW.tar.xz

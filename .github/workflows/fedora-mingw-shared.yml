@@ -1,4 +1,4 @@
-name: fedora-mingw
+name: fedora-mingw-shared
 on: [release]
 jobs:
   tests:
@@ -27,7 +27,7 @@ jobs:
         run: |
           export BUILD_DIR=$(pwd)/build-${{matrix.triple}}
           mkdir -p $BUILD_DIR
-          ./configure --host=${{matrix.triple}} OBJC="clang -target ${{matrix.triple}}" --prefix=$BUILD_DIR
+          ./configure --host=${{matrix.triple}} OBJC="clang -target ${{matrix.triple}}" --prefix=$BUILD_DIR --disable-static --enable-shared
       - name: make
         working-directory: ./ObjFW
         run: make -j$(nproc)
