@@ -1,0 +1,44 @@
+name: fedora-mingw
+on: [push, pull_request]
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - prefix: mingw32
+            triple: i686-w64-mingw32
+          - prefix: mingw64
+            triple: x86_64-w64-mingw32
+          - prefix: ucrt64
+            triple: x86_64-w64-mingw32ucrt
+    container: fedora:41
+    steps:
+    - name: Install dependencies
+      working-directory: ./objfw
+      run: |
+        sudo dnf upgrade --refresh -y
+        sudo dnf install -y ${{matrix.prefix}}-gcc ${{matrix.prefix}}-openssl clang autoconf automake make wine
+    - uses: actions/checkout@v4
+    - name: autogen.sh
+      working-directory: ./objfw
+      run: ./autogen.sh
+    - name: configure
+      working-directory: ./objfw
+      #We need a good prefix, as we will be uploading the artifacts
+      run: ./configure --host=${{matrix.triple}} OBJC="clang -target ${{matrix.triple}}" --prefix=./build-${{matrix.triple}}
+    - name: make
+      working-directory: ./objfw
+      run: make -j$(nproc)
+    - name: make check
+      working-directory: ./objfw
+      run: WINEPATH=/usr/${{matrix.triple}}/sys-root/mingw/bin WINEPREFIX=/tmp/wineprefix make check
+    - name: make install
+      working-directory: ./objfw
+      run: sudo make install
+    - name: tar objfw.tar.xz ./objfw/build
+      run: tar -cJf objfw.tar.xz ./objfw/build-${{matrix.triple}}
+    - uses: actions/upload-artifact@v2
+      with:
+        name: objfw-${{matrix.prefix}}
+        path: ./objfw.tar.xz

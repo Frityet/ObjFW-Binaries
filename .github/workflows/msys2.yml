@@ -1,0 +1,50 @@
+name: msys2
+on: [push, pull_request]
+jobs:
+  tests:
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        sys:
+          # Broken: Exceptions with ARC fail. Works with other mingw-w64
+          # distributions.
+          #- mingw32
+          - mingw64
+          - ucrt64
+          - clang32
+          - clang64
+    steps:
+      - uses: actions/checkout@v4
+      - uses: msys2/setup-msys2@v2
+        with:
+          update: true
+          msystem: ${{matrix.sys}}
+          install: autoconf automake make tar
+          pacboy: clang:p openssl:p
+      - name: autogen.sh
+        shell: msys2 {0}
+        working-directory: ./objfw
+        run: ./autogen.sh
+      - name: configure
+        shell: msys2 {0}
+        working-directory: ./objfw
+        run: ./configure OBJC=clang --prefix=./build-${{matrix.sys}}
+      - name: make
+        shell: msys2 {0}
+        working-directory: ./objfw
+        run: make -j4
+      - name: make check
+        shell: msys2 {0}
+        working-directory: ./objfw
+        run: make check
+      - name: make install
+        shell: msys2 {0}
+        working-directory: ./objfw
+        run: make install
+      - name: tar objfw.tar.xz ./objfw/build
+        shell: msys2 {0}
+        run: tar -cJf objfw.tar.xz ./objfw/build-${{matrix.sys}}
+      - uses: actions/upload-artifact@v2
+        with:
+          name: objfw-${{matrix.sys}}
+          path: ./objfw.tar.xz
