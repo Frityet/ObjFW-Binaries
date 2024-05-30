@@ -47,9 +47,9 @@ jobs:
         shell: msys2 {0}
         working-directory: ./ObjFW
         run: make install
-      - name: tar objfw.tar.xz ./ObjFW/build-${{matrix.sys}}
+      - name: tar ObjFW.tar.xz ./ObjFW/build-${{matrix.sys}}
         shell: msys2 {0}
-        run: tar -cJf objfw.tar.xz ./ObjFW/build-${{matrix.sys}}
+        run: tar -cJf ObjFW.tar.xz ./ObjFW/build-${{matrix.sys}}
       - uses: actions/upload-artifact@v4
         with:
           name: objfw-${{matrix.sys}}
