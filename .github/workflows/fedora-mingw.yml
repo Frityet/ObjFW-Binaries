@@ -26,8 +26,9 @@ jobs:
         working-directory: ./ObjFW
         #We need a good prefix, as we will be uploading the artifacts
         run: |
-          mkdir -p ./build-${{matrix.triple}}
-          ./configure --host=${{matrix.triple}} OBJC="clang -target ${{matrix.triple}}" --prefix=./build-${{matrix.triple}}
+          export BUILD_DIR=$(pwd)/build-${{matrix.triple}}
+          mkdir -p $BUILD_DIR
+          ./configure --host=${{matrix.triple}} OBJC="clang -target ${{matrix.triple}}" --prefix=$BUILD_DIR
       - name: make
         working-directory: ./ObjFW
         run: make -j$(nproc)

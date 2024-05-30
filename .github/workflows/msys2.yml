@@ -32,8 +32,9 @@ jobs:
         shell: msys2 {0}
         working-directory: ./ObjFW
         run: |
-          mkdir -p ./build-${{matrix.sys}}
-          ./configure OBJC=clang --prefix=./build-${{matrix.sys}}
+          export BUILD_DIR=$(pwd)/build-${{matrix.sys}}
+          mkdir -p $BUILD_DIR
+          ./configure OBJC=clang --prefix=$BUILD_DIR
       - name: make
         shell: msys2 {0}
         working-directory: ./ObjFW
@@ -46,7 +47,7 @@ jobs:
         shell: msys2 {0}
         working-directory: ./ObjFW
         run: make install
-      - name: tar objfw.tar.xz ./ObjFW/build
+      - name: tar objfw.tar.xz ./ObjFW/build-${{matrix.sys}}
         shell: msys2 {0}
         run: tar -cJf objfw.tar.xz ./ObjFW/build-${{matrix.sys}}
       - uses: actions/upload-artifact@v2
