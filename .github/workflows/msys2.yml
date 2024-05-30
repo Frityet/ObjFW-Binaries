@@ -53,3 +53,30 @@ jobs:
         with:
           name: ObjFW-msys2-${{matrix.sys}}
           path: ./ObjFW-msys2-${{matrix.sys}}.tar.xz
+
+      - name: configure static
+        shell: msys2 {0}
+        working-directory: ./ObjFW
+        run: |
+          export BUILD_DIR=$(pwd)/ObjFW-msys2-${{matrix.sys}}-static
+          mkdir -p $BUILD_DIR
+          ./configure OBJC=clang --prefix=$BUILD_DIR --disable-shared --enable-static
+      - name: make static
+        shell: msys2 {0}
+        working-directory: ./ObjFW
+        run: make -j4
+      - name: make install static
+        shell: msys2 {0}
+        working-directory: ./ObjFW
+        run: make install
+      - name: tar ObjFW-msys2-${{matrix.sys}}-static.tar.xz ./ObjFW/ObjFW-msys2-${{matrix.sys}}-static
+        run: |
+          cp ./ObjFW/COPYING $BUILD_DIR
+          cp ./ObjFW/COPYING.LESSER $BUILD_DIR
+          cp ./ObjFW/README.md $BUILD_DIR
+          cp ./ObjFW/ChangeLog $BUILD_DIR
+          tar -cJf ObjFW-msys2-${{matrix.sys}}-static.tar.xz ./ObjFW/ObjFW-msys2-${{matrix.sys}}-static
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ObjFW-msys2-${{matrix.sys}}-static
+          path: ./ObjFW-msys2-${{matrix.sys}}-static.tar.xz
