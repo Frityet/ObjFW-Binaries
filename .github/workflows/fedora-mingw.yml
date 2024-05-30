@@ -16,6 +16,7 @@ jobs:
         with:
           update: true
           submodules: true
+          install: git #needed for submodules
 
       - name: Install dependencies
         working-directory: ./ObjFW

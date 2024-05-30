@@ -15,7 +15,7 @@ jobs:
         with:
           update: true
           msystem: ${{matrix.sys}}
-          install: autoconf automake make tar
+          install: autoconf automake make tar git
           pacboy: clang:p openssl:p
           submodules: true
 
