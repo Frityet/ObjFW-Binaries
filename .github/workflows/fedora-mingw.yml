@@ -39,11 +39,12 @@ jobs:
         run: sudo make install
       - name: tar ObjFW-${{matrix.prefix}}-${{matrix.triple}}.tar.xz ./ObjFW/ObjFW-${{matrix.prefix}}-${{matrix.triple}}
         run: |
+          export BUILD_DIR=$(pwd)/ObjFW/ObjFW-${{matrix.prefix}}-${{matrix.triple}}
           cp ./ObjFW/COPYING $BUILD_DIR
           cp ./ObjFW/COPYING.LESSER $BUILD_DIR
           cp ./ObjFW/README.md $BUILD_DIR
           cp ./ObjFW/ChangeLog $BUILD_DIR
-          tar -cJf ObjFW-${{matrix.prefix}}-${{matrix.triple}}.tar.xz ./ObjFW/ObjFW-${{matrix.prefix}}-${{matrix.triple}}
+          tar -cJf ObjFW-${{matrix.prefix}}-${{matrix.triple}}.tar.xz $BUILD_DIR
       - uses: actions/upload-artifact@v4
         with:
           name: ObjFW-${{matrix.prefix}}-${{matrix.triple}}
@@ -63,11 +64,12 @@ jobs:
         run: sudo make install
       - name: tar ObjFW-${{matrix.prefix}}-${{matrix.triple}}-static.tar.xz ./ObjFW/ObjFW-${{matrix.prefix}}-${{matrix.triple}}-static
         run: |
+          export BUILD_DIR=$(pwd)/ObjFW/ObjFW-${{matrix.prefix}}-${{matrix.triple}}-static
           cp ./ObjFW/COPYING $BUILD_DIR
           cp ./ObjFW/COPYING.LESSER $BUILD_DIR
           cp ./ObjFW/README.md $BUILD_DIR
           cp ./ObjFW/ChangeLog $BUILD_DIR
-          tar -cJf ObjFW-${{matrix.prefix}}-${{matrix.triple}}-static.tar.xz ./ObjFW/ObjFW-${{matrix.prefix}}-${{matrix.triple}}-static
+          tar -cJf ObjFW-${{matrix.prefix}}-${{matrix.triple}}-static.tar.xz $BUILD_DIR
       - uses: actions/upload-artifact@v4
         with:
           name: ObjFW-${{matrix.prefix}}-${{matrix.triple}}-static

@@ -44,11 +44,12 @@ jobs:
         run: make install
       - name: tar ObjFW-msys2-${{matrix.sys}}.tar.xz ./ObjFW/ObjFW-msys2-${{matrix.sys}}
         run: |
+          export BUILD_DIR=$(pwd)/ObjFW/ObjFW-msys2-${{matrix.sys}}
           cp ./ObjFW/COPYING $BUILD_DIR
           cp ./ObjFW/COPYING.LESSER $BUILD_DIR
           cp ./ObjFW/README.md $BUILD_DIR
           cp ./ObjFW/ChangeLog $BUILD_DIR
-          tar -cJf ObjFW-msys2-${{matrix.sys}}.tar.xz ./ObjFW/ObjFW-msys2-${{matrix.sys}}
+          tar -cJf ObjFW-msys2-${{matrix.sys}}.tar.xz $BUILD_DIR
       - uses: actions/upload-artifact@v4
         with:
           name: ObjFW-msys2-${{matrix.sys}}
@@ -71,11 +72,12 @@ jobs:
         run: make install
       - name: tar ObjFW-msys2-${{matrix.sys}}-static.tar.xz ./ObjFW/ObjFW-msys2-${{matrix.sys}}-static
         run: |
+          export BUILD_DIR=$(pwd)/ObjFW/ObjFW-msys2-${{matrix.sys}}-static
           cp ./ObjFW/COPYING $BUILD_DIR
           cp ./ObjFW/COPYING.LESSER $BUILD_DIR
           cp ./ObjFW/README.md $BUILD_DIR
           cp ./ObjFW/ChangeLog $BUILD_DIR
-          tar -cJf ObjFW-msys2-${{matrix.sys}}-static.tar.xz ./ObjFW/ObjFW-msys2-${{matrix.sys}}-static
+          tar -cJf ObjFW-msys2-${{matrix.sys}}-static.tar.xz $BUILD_DIR
       - uses: actions/upload-artifact@v4
         with:
           name: ObjFW-msys2-${{matrix.sys}}-static
