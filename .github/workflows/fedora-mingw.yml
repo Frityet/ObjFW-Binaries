@@ -1,4 +1,4 @@
-name: fedora-mingw-static
+name: fedora-mingw
 on: [release, workflow_dispatch]
 jobs:
   tests:
@@ -25,9 +25,9 @@ jobs:
       - name: configure
         working-directory: ./ObjFW
         run: |
-          export BUILD_DIR=$(pwd)/build-${{matrix.triple}}
+          export BUILD_DIR=$(pwd)/ObjFW-${{matrix.prefix}}-${{matrix.triple}}
           mkdir -p $BUILD_DIR
-          ./configure --host=${{matrix.triple}} OBJC="clang -target ${{matrix.triple}}" --prefix=$BUILD_DIR --disable-shared --enable-static
+          ./configure --host=${{matrix.triple}} OBJC="clang -target ${{matrix.triple}}" --prefix=$BUILD_DIR --disable-static
       - name: make
         working-directory: ./ObjFW
         run: make -j$(nproc)
@@ -37,9 +37,14 @@ jobs:
       - name: make install
         working-directory: ./ObjFW
         run: sudo make install
-      - name: tar ObjFW.tar.xz ./ObjFW/build
-        run: tar -cJf ObjFW.tar.xz ./ObjFW/build-${{matrix.triple}}
+      - name: tar ObjFW-${{matrix.prefix}}-${{matrix.triple}}.tar.xz ./ObjFW/ObjFW-${{matrix.prefix}}-${{matrix.triple}}
+        run: |
+          cp ./ObjFW/COPYING $BUILD_DIR
+          cp ./ObjFW/COPYING.LESSER $BUILD_DIR
+          cp ./ObjFW/README.md $BUILD_DIR
+          cp ./ObjFW/ChangeLog $BUILD_DIR
+          tar -cJf ObjFW-${{matrix.prefix}}-${{matrix.triple}}.tar.xz ./ObjFW/ObjFW-${{matrix.prefix}}-${{matrix.triple}}
       - uses: actions/upload-artifact@v4
         with:
-          name: objfw-${{matrix.prefix}}
-          path: ./ObjFW.tar.xz
+          name: ObjFW-${{matrix.prefix}}-${{matrix.triple}}
+          path: ./ObjFW-${{matrix.prefix}}-${{matrix.triple}}.tar.xz
