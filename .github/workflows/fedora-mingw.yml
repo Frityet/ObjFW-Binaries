@@ -17,11 +17,13 @@ jobs:
           sudo dnf upgrade --refresh -y
           sudo dnf install -y ${{matrix.prefix}}-gcc ${{matrix.prefix}}-openssl clang autoconf automake make wine git
       - uses: actions/checkout@v4
-      - name: Get submodules
-        shell: msys2 {0}
-        run: |
-          git config --global --add safe.directory ./
-          git submodule update --init --recursive
+        with:
+          submodules: true
+      # - name: Get submodules
+      #   shell: msys2 {0}
+      #   run: |
+      #     git config --global --add safe.directory ./
+      #     git submodule update --init --recursive
       - name: autogen.sh
         working-directory: ./ObjFW
         run: ./autogen.sh

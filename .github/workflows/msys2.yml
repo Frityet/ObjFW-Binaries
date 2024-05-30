@@ -11,14 +11,14 @@ jobs:
           - clang64
     steps:
       - uses: actions/checkout@v4
+        with:
+          submodules: true
       - uses: msys2/setup-msys2@v2
         with:
           update: true
           msystem: ${{matrix.sys}}
           install: autoconf automake make tar git
           pacboy: clang:p openssl:p
-          submodules: true
-      - uses: actions/checkout@v4
       - name: Get submodules
         shell: msys2 {0}
         run: |
