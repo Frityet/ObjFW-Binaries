@@ -18,6 +18,7 @@ jobs:
           install: autoconf automake make tar git
           pacboy: clang:p openssl:p
           submodules: true
+      - uses: actions/checkout@v4
       - name: Get submodules
         shell: msys2 {0}
         run: git submodule update --init --recursive
