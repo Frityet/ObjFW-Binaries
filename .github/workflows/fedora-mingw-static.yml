@@ -1,5 +1,5 @@
 name: fedora-mingw-static
-on: [release]
+on: [release, workflow_dispatch]
 jobs:
   tests:
     runs-on: ubuntu-latest
