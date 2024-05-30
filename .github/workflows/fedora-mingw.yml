@@ -13,7 +13,6 @@ jobs:
     container: fedora:41
     steps:
       - name: Install dependencies
-        working-directory: ./ObjFW
         run: |
           sudo dnf upgrade --refresh -y
           sudo dnf install -y ${{matrix.prefix}}-gcc ${{matrix.prefix}}-openssl clang autoconf automake make wine git
