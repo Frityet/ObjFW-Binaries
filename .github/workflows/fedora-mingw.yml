@@ -19,18 +19,15 @@ jobs:
       - uses: actions/checkout@v4
         with:
           submodules: true
-      # - name: Get submodules
-      #   shell: msys2 {0}
-      #   run: |
-      #     git config --global --add safe.directory ./
-      #     git submodule update --init --recursive
       - name: autogen.sh
         working-directory: ./ObjFW
         run: ./autogen.sh
       - name: configure
         working-directory: ./ObjFW
         #We need a good prefix, as we will be uploading the artifacts
-        run: ./configure --host=${{matrix.triple}} OBJC="clang -target ${{matrix.triple}}" --prefix=./build-${{matrix.triple}}
+        run: |
+          mkdir -p ./build-${{matrix.triple}}
+          ./configure --host=${{matrix.triple}} OBJC="clang -target ${{matrix.triple}}" --prefix=./build-${{matrix.triple}}
       - name: make
         working-directory: ./ObjFW
         run: make -j$(nproc)

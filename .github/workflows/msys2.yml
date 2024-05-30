@@ -31,7 +31,9 @@ jobs:
       - name: configure
         shell: msys2 {0}
         working-directory: ./ObjFW
-        run: ./configure OBJC=clang --prefix=./build-${{matrix.sys}}
+        run: |
+          mkdir -p ./build-${{matrix.sys}}
+          ./configure OBJC=clang --prefix=./build-${{matrix.sys}}
       - name: make
         shell: msys2 {0}
         working-directory: ./ObjFW
