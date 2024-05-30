@@ -6,8 +6,6 @@ jobs:
     strategy:
       matrix:
         include:
-          - prefix: mingw32
-            triple: i686-w64-mingw32
           - prefix: mingw64
             triple: x86_64-w64-mingw32
           - prefix: ucrt64
