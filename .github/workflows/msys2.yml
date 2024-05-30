@@ -18,7 +18,9 @@ jobs:
           install: autoconf automake make tar git
           pacboy: clang:p openssl:p
           submodules: true
-
+      - name: Get submodules
+        shell: msys2 {0}
+        run: git submodule update --init --recursive
       - name: autogen.sh
         shell: msys2 {0}
         working-directory: ./ObjFW

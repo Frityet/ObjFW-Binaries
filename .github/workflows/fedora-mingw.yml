@@ -12,17 +12,13 @@ jobs:
             triple: x86_64-w64-mingw32ucrt
     container: fedora:41
     steps:
-      - uses: actions/checkout@v4
-        with:
-          update: true
-          submodules: true
-          install: git #needed for submodules
-
       - name: Install dependencies
         working-directory: ./ObjFW
         run: |
           sudo dnf upgrade --refresh -y
-          sudo dnf install -y ${{matrix.prefix}}-gcc ${{matrix.prefix}}-openssl clang autoconf automake make wine
+          sudo dnf install -y ${{matrix.prefix}}-gcc ${{matrix.prefix}}-openssl clang autoconf automake make wine git
+      - name: Get submodules
+        run: git submodule update --init --recursive
       - uses: actions/checkout@v4
       - name: autogen.sh
         working-directory: ./ObjFW
