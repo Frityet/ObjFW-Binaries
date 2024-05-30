@@ -17,6 +17,8 @@ jobs:
           msystem: ${{matrix.sys}}
           install: autoconf automake make tar
           pacboy: clang:p openssl:p
+          submodules: true
+
       - name: autogen.sh
         shell: msys2 {0}
         working-directory: ./ObjFW

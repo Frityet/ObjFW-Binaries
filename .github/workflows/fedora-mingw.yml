@@ -12,31 +12,36 @@ jobs:
             triple: x86_64-w64-mingw32ucrt
     container: fedora:41
     steps:
-    - name: Install dependencies
-      working-directory: ./ObjFW
-      run: |
-        sudo dnf upgrade --refresh -y
-        sudo dnf install -y ${{matrix.prefix}}-gcc ${{matrix.prefix}}-openssl clang autoconf automake make wine
-    - uses: actions/checkout@v4
-    - name: autogen.sh
-      working-directory: ./ObjFW
-      run: ./autogen.sh
-    - name: configure
-      working-directory: ./ObjFW
-      #We need a good prefix, as we will be uploading the artifacts
-      run: ./configure --host=${{matrix.triple}} OBJC="clang -target ${{matrix.triple}}" --prefix=./build-${{matrix.triple}}
-    - name: make
-      working-directory: ./ObjFW
-      run: make -j$(nproc)
-    - name: make check
-      working-directory: ./ObjFW
-      run: WINEPATH=/usr/${{matrix.triple}}/sys-root/mingw/bin WINEPREFIX=/tmp/wineprefix make check
-    - name: make install
-      working-directory: ./ObjFW
-      run: sudo make install
-    - name: tar objfw.tar.xz ./ObjFW/build
-      run: tar -cJf objfw.tar.xz ./ObjFW/build-${{matrix.triple}}
-    - uses: actions/upload-artifact@v2
-      with:
-        name: objfw-${{matrix.prefix}}
-        path: ./ObjFW.tar.xz
+      - uses: actions/checkout@v4
+        with:
+          update: true
+          submodules: true
+
+      - name: Install dependencies
+        working-directory: ./ObjFW
+        run: |
+          sudo dnf upgrade --refresh -y
+          sudo dnf install -y ${{matrix.prefix}}-gcc ${{matrix.prefix}}-openssl clang autoconf automake make wine
+      - uses: actions/checkout@v4
+      - name: autogen.sh
+        working-directory: ./ObjFW
+        run: ./autogen.sh
+      - name: configure
+        working-directory: ./ObjFW
+        #We need a good prefix, as we will be uploading the artifacts
+        run: ./configure --host=${{matrix.triple}} OBJC="clang -target ${{matrix.triple}}" --prefix=./build-${{matrix.triple}}
+      - name: make
+        working-directory: ./ObjFW
+        run: make -j$(nproc)
+      - name: make check
+        working-directory: ./ObjFW
+        run: WINEPATH=/usr/${{matrix.triple}}/sys-root/mingw/bin WINEPREFIX=/tmp/wineprefix make check
+      - name: make install
+        working-directory: ./ObjFW
+        run: sudo make install
+      - name: tar objfw.tar.xz ./ObjFW/build
+        run: tar -cJf objfw.tar.xz ./ObjFW/build-${{matrix.triple}}
+      - uses: actions/upload-artifact@v2
+        with:
+          name: objfw-${{matrix.prefix}}
+          path: ./ObjFW.tar.xz
