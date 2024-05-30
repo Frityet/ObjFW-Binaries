@@ -1,5 +1,5 @@
 name: fedora-mingw
-on: [push, pull_request]
+on: [release]
 jobs:
   tests:
     runs-on: ubuntu-latest
@@ -40,7 +40,7 @@ jobs:
         run: sudo make install
       - name: tar objfw.tar.xz ./ObjFW/build
         run: tar -cJf objfw.tar.xz ./ObjFW/build-${{matrix.triple}}
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v4
         with:
           name: objfw-${{matrix.prefix}}
           path: ./ObjFW.tar.xz

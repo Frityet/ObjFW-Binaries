@@ -1,5 +1,5 @@
 name: msys2
-on: [push, pull_request]
+on: [release]
 jobs:
   tests:
     runs-on: windows-latest
@@ -50,7 +50,7 @@ jobs:
       - name: tar objfw.tar.xz ./ObjFW/build-${{matrix.sys}}
         shell: msys2 {0}
         run: tar -cJf objfw.tar.xz ./ObjFW/build-${{matrix.sys}}
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v4
         with:
           name: objfw-${{matrix.sys}}
           path: ./ObjFW.tar.xz
